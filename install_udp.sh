@@ -657,7 +657,7 @@ perform_install_manager_script() {
     local _symlink_path="/usr/local/bin/hunmainudp"
     
     echo "Downloading manager script..."
-    curl -o "$_manager_script" "https://raw.githubusercontent.com/sansoe2022/udp/refs/heads/main/svpn_udp_manager.sh"
+    curl -o "$_manager_script" "https://raw.githubusercontent.com/hunmai/udp/refs/heads/main/hunmai_udp.sh"
     chmod +x "$_manager_script"
     
     echo "Creating symbolic link to run the manager script using 'hunmaiudp' command..."
@@ -735,13 +735,13 @@ perform_install() {
         echo "Use 'hunmaiudp' command to access the manager."
 
         echo
-        echo -e "$(tbold)Client app SVPN Connect:$(treset)"
-        echo -e "$(tblue)https://play.google.com/store/apps/details?id=com.svpnmm.mmdev"
+        echo -e "$(tbold)Client app PUKANG VPN Connect:$(treset)"
+        echo -e "$(tblue)https://hunmai.site/app"
         echo
         echo -e "Follow me!"
         echo
-        echo -e "\t+ Follow me on Telegram: $(tblue)https://t.me/sansoe2021$(treset)"
-        echo -e "\t+ Follow me on Facebook: $(tblue)https://www.facebook.com/share/15KzEGz3Es/"
+        echo -e "\t+ Follow me on Telegram: $(tblue)https://t.me/ovpntg$(treset)"
+        echo -e "\t+ Follow me on Facebook: $(tblue)https://www.facebook.com/share/19uYHTVf6b/"
         echo
     else
         restart_running_services
