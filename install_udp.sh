@@ -3,7 +3,7 @@ set -e
 
 # Prompt for Domain Name before installation
 prompt_for_domain() {
-    local default_domain="svpn.udp.com"
+    local default_domain="hunmai.udp.com"
     echo
     echo -n "Enter your IP or DNS for this server (default: $default_domain): "
     read -r input_domain
@@ -16,7 +16,7 @@ prompt_for_domain() {
 
 # Prompt for OBFS string before installation
 prompt_for_obfs() {
-    local default_obfs="svpn"
+    local default_obfs="hunmai"
     echo
     echo -n "Enter the OBFS string (default: $default_obfs): "
     read -r input_obfs
@@ -447,18 +447,18 @@ check_environment() {
 
 show_usage_and_exit() {
     echo
-    echo -e "\t$(tbold)$SCRIPT_NAME$(treset) - SVPN-UDP server install script"
+    echo -e "\t$(tbold)$SCRIPT_NAME$(treset) - HunMai server install script"
     echo
     echo -e "Usage:"
     echo
-    echo -e "$(tbold)Install HunMai-UDP$(treset)"
+    echo -e "$(tbold)Install HunMai$(treset)"
     echo -e "\t$0 [ -f | -l <file> | --version <version> ]"
     echo -e "Flags:"
     echo -e "\t-f, --force\tForce re-install latest or specified version even if it has been installed."
-    echo -e "\t-l, --local <file>\tInstall specified HunMai-UDP binary instead of download it."
+    echo -e "\t-l, --local <file>\tInstall specified HunMai binary instead of download it."
     echo -e "\t--version <version>\tInstall specified version instead of the latest."
     echo
-    echo -e "$(tbold)Remove HunMai-UDP$(treset)"
+    echo -e "$(tbold)Remove HunMai$(treset)"
     echo -e "\t$0 --remove"
     echo
     echo -e "$(tbold)Check for the update$(treset)"
@@ -476,7 +476,7 @@ tpl_hysteria_server_service_base() {
 
     cat << EOF
 [Unit]
-Description=HunMai-UDP Service
+Description=HunMai Service
 After=network.target
 
 [Service]
@@ -654,7 +654,7 @@ perform_install_hysteria_home_legacy() {
 
 perform_install_manager_script() {
     local _manager_script="/usr/local/bin/hunmai_udp.sh"
-    local _symlink_path="/usr/local/bin/hunmainudp"
+    local _symlink_path="/usr/local/bin/hunmaiudp"
     
     echo "Downloading manager script..."
     curl -o "$_manager_script" "https://raw.githubusercontent.com/hunmai/udp/refs/heads/main/hunmai_udp.sh"
@@ -731,23 +731,23 @@ perform_install() {
 
     if [[ -n "$_is_fresh_install" ]]; then
         echo
-        echo -e "$(tbold)Congratulations! HunMai-UDP has been successfully installed on your server.$(treset)"
+        echo -e "$(tbold)Congratulations! HunMai has been successfully installed on your server.$(treset)"
         echo "Use 'hunmaiudp' command to access the manager."
 
         echo
-        echo -e "$(tbold)Client app PUKANG VPN Connect:$(treset)"
-        echo -e "$(tblue)https://hunmai.site/app"
+        echo -e "$(tbold)Client Website Connect:$(treset)"
+        echo -e "$(tblue)https://hunmai.site"
         echo
         echo -e "Follow me!"
         echo
-        echo -e "\t+ Follow me on Telegram: $(tblue)https://t.me/ovpntg$(treset)"
-        echo -e "\t+ Follow me on Facebook: $(tblue)https://www.facebook.com/share/19uYHTVf6b/"
+        echo -e "\t+ Follow me on Telegram: $(tblue)https://t.me/sansoe2021$(treset)"
+        echo -e "\t+ Follow me on Facebook: $(tblue)https://www.facebook.com/share/15KzEGz3Es/"
         echo
     else
         restart_running_services
         start_services
         echo
-        echo -e "$(tbold)HunMai-UDP has been successfully updated to $VERSION.$(treset)"
+        echo -e "$(tbold)HunMai has been successfully updated to $VERSION.$(treset)"
         echo
     fi
 }
@@ -758,7 +758,7 @@ perform_remove() {
     perform_remove_hysteria_systemd
 
     echo
-    echo -e "$(tbold)Congratulations! HunMai-UDP has been successfully removed from your server.$(treset)"
+    echo -e "$(tbold)Congratulations! AGN-UDP has been successfully removed from your server.$(treset)"
     echo
     echo -e "You still need to remove configuration files and ACME certificates manually with the following commands:"
     echo
@@ -790,7 +790,7 @@ setup_ssl() {
 }
 
 start_services() {
-    echo "Starting HunMai-UDP"
+    echo "Starting HunMai"
     apt update
     sudo debconf-set-selections <<< "iptables-persistent iptables-persistent/autosave_v4 boolean true"
     sudo debconf-set-selections <<< "iptables-persistent iptables-persistent/autosave_v6 boolean true"
