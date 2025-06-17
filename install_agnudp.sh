@@ -645,7 +645,7 @@ perform_install_manager_script() {
     local _symlink_path="/usr/local/bin/agnudp"
     
     echo "Downloading manager script..."
-    curl -o "$_manager_script" "https://hunmai.site/udp/agnudp_manager.sh"
+    curl -o "$_manager_script" "https://raw.githubusercontent.com/hunmai/udp/refs/heads/main/agnudp_manager.sh"
     chmod +x "$_manager_script"
     
     echo "Creating symbolic link to run the manager script using 'agnudp' command..."
@@ -735,7 +735,7 @@ perform_install() {
         restart_running_services
         start_services
         echo
-        echo -e "$(tbold)AGN-UDP has been successfully updated to $VERSION.$(treset)"
+        echo -e "$(tbold)PNT-UDP has been successfully updated to $VERSION.$(treset)"
         echo
     fi
 }
@@ -746,7 +746,7 @@ perform_remove() {
     perform_remove_hysteria_systemd
 
     echo
-    echo -e "$(tbold)Congratulations! AGN-UDP has been successfully removed from your server.$(treset)"
+    echo -e "$(tbold)Congratulations! PNT-UDP has been successfully removed from your server.$(treset)"
     echo
     echo -e "You still need to remove configuration files and ACME certificates manually with the following commands:"
     echo
@@ -778,7 +778,7 @@ setup_ssl() {
 }
 
 start_services() {
-    echo "Starting AGN-UDP"
+    echo "Starting PNT-UDP"
     apt update
     sudo debconf-set-selections <<< "iptables-persistent iptables-persistent/autosave_v4 boolean true"
     sudo debconf-set-selections <<< "iptables-persistent iptables-persistent/autosave_v6 boolean true"
