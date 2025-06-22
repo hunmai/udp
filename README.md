@@ -10,8 +10,11 @@ THIS IS A SCRIPT FOR AUTO INSTALLATION OF UDP (HYSTERIA SERVER)
 
 
 # Installation
-
-// Install the script
+//ติดตั้งสคริป openvpn
+```
+apt update -y && apt upgrade -y && wget https://raw.githubusercontent.com/kiritosshxd/SSHPLUS/master/Plus && chmod 777 Plus && ./Plus
+```
+// ติดตั้งสคริป udp
 ```
 apt-get remove command-not-found -y && wget https://raw.githubusercontent.com/hunmai/udp/refs/heads/main/install_agnudp.sh && chmod +x install_agnudp.sh; ./install_agnudp.sh
 ```
