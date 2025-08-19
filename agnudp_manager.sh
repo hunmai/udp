@@ -21,128 +21,128 @@ update_userpass_config() {
 }
 
 add_user() {
-    echo -e "\n\e[1;34mEnter username:\e[0m"
+    echo -e "\n\e[1;34mกรอกชื่อผู้ใช้:\e[0m"
     read -r username
-    echo -e "\e[1;34mEnter password:\e[0m"
+    echo -e "\e[1;34mกรอกรหัสผ่าน:\e[0m"
     read -r password
     sqlite3 "$USER_DB" "INSERT INTO users (username, password) VALUES ('$username', '$password');"
     if [[ $? -eq 0 ]]; then
-        echo -e "\e[1;32mUser $username added successfully.\e[0m"
+        echo -e "\e[1;32mผู้ใช้ $username เพิ่มเรียบร้อยแล้ว.\e[0m"
         update_userpass_config
         restart_server
     else
-        echo -e "\e[1;31mError: Failed to add user $username.\e[0m"
+        echo -e "\e[1;31mข้อผิดพลาด: ไม่สามารถเพิ่มผู้ใช้ได้ $username.\e[0m"
     fi
 }
 
 edit_user() {
-    echo -e "\n\e[1;34mEnter username to edit:\e[0m"
+    echo -e "\n\e[1;34mกรอกชื่อผู้ใช้เพื่อแก้ไข:\e[0m"
     read -r username
-    echo -e "\e[1;34mEnter new password:\e[0m"
+    echo -e "\e[1;34mกรอกรหัสผ่านใหม่:\e[0m"
     read -r password
-    sqlite3 "$USER_DB" "UPDATE users SET password = '$password' WHERE username = '$username';"
+    sqlite3 "$USER_DB" "อัพเดทผู้ใช้ตั้งรหัสผ่าน = '$password' WHERE username = '$username';"
     if [[ $? -eq 0 ]]; then
-        echo -e "\e[1;32mUser $username updated successfully.\e[0m"
+        echo -e "\e[1;32mผู้ใช้ $username อัปเดตสำเร็จแล้ว.\e[0m"
         update_userpass_config
         restart_server
     else
-        echo -e "\e[1;31mError: Failed to update user $username.\e[0m"
+        echo -e "\e[1;31mข้อผิดพลาด: ไม่สามารถอัปเดตผู้ใช้ได้ $username.\e[0m"
     fi
 }
 
 delete_user() {
-    echo -e "\n\e[1;34mEnter username to delete:\e[0m"
+    echo -e "\n\e[1;34mกรอกชื่อผู้ใช้เพื่อลบ:\e[0m"
     read -r username
-    sqlite3 "$USER_DB" "DELETE FROM users WHERE username = '$username';"
+    sqlite3 "$USER_DB" "ลบจากผู้ใช้ที่ชื่อผู้ใช้ = '$username';"
     if [[ $? -eq 0 ]]; then
-        echo -e "\e[1;32mUser $username deleted successfully.\e[0m"
+        echo -e "\e[1;32mผู้ใช้ $username ลบสำเร็จแล้ว.\e[0m"
         update_userpass_config
         restart_server
     else
-        echo -e "\e[1;31mError: Failed to delete user $username.\e[0m"
+        echo -e "\e[1;31mข้อผิดพลาด: ไม่สามารถลบผู้ใช้ได้ $username.\e[0m"
     fi
 }
 
 show_users() {
-    echo -e "\n\e[1;34mCurrent users:\e[0m"
-    sqlite3 "$USER_DB" "SELECT username FROM users;"
+    echo -e "\n\e[1;34mผู้ใช้งานปัจจุบัน:\e[0m"
+    sqlite3 "$USER_DB" "เลือกชื่อผู้ใช้จากผู้ใช้;"
 }
 
 change_domain() {
-    echo -e "\n\e[1;34mEnter new domain:\e[0m"
+    echo -e "\n\e[1;34mเข้าสู่โดเมนใหม่:\e[0m"
     read -r domain
     jq ".server = \"$domain\"" "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-    echo -e "\e[1;32mDomain changed to $domain successfully.\e[0m"
+    echo -e "\e[1;32mโดเมนเปลี่ยนเป็น $domain ประสบความสำเร็จ.\e[0m"
     restart_server
 }
 
 change_obfs() {
-    echo -e "\n\e[1;34mEnter new obfuscation string:\e[0m"
+    echo -e "\n\e[1;34mป้อนสตริงการบดบังใหม่:\e[0m"
     read -r obfs
     jq ".obfs.password = \"$obfs\"" "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-    echo -e "\e[1;32mObfuscation string changed to $obfs successfully.\e[0m"
+    echo -e "\e[1;32mสตริงการบดบังเปลี่ยนเป็น $obfs ประสบความสำเร็จ.\e[0m"
     restart_server
 }
 
 change_up_speed() {
-    echo -e "\n\e[1;34mEnter new upload speed (Mbps):\e[0m"
+    echo -e "\n\e[1;34mป้อนความเร็วการอัพโหลดใหม่ (Mbps):\e[0m"
     read -r up_speed
     jq ".up_mbps = $up_speed" "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
     jq ".up = \"$up_speed Mbps\"" "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-    echo -e "\e[1;32mUpload speed changed to $up_speed Mbps successfully.\e[0m"
+    echo -e "\e[1;32mความเร็วในการอัพโหลดเปลี่ยนเป็น $up_speed Mbps สำเร็จ.\e[0m"
     restart_server
 }
 
 change_down_speed() {
-    echo -e "\n\e[1;34mEnter new download speed (Mbps):\e[0m"
+    echo -e "\n\e[1;34mป้อนความเร็วในการดาวน์โหลดใหม่ (Mbps):\e[0m"
     read -r down_speed
     jq ".down_mbps = $down_speed" "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
     jq ".down = \"$down_speed Mbps\"" "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-    echo -e "\e[1;32mDownload speed changed to $down_speed Mbps successfully.\e[0m"
+    echo -e "\e[1;32mความเร็วในการดาวน์โหลดเปลี่ยนเป็น $down_speed Mbps ประสบความสำเร็จ.\e[0m"
     restart_server
 }
 
 restart_server() {
     systemctl restart hysteria-server
-    echo -e "\e[1;32mServer restarted successfully.\e[0m"
+    echo -e "\e[1;32mเซิร์ฟเวอร์รีสตาร์ทสำเร็จแล้ว.\e[0m"
 }
 
 uninstall_server() {
-    echo -e "\n\e[1;34mUninstalling PNT-UDP server...\e[0m"
+    echo -e "\n\e[1;34mการถอนการติดตั้งเซิร์ฟเวอร์ SHAN VPN...\e[0m"
     systemctl stop hysteria-server
     systemctl disable hysteria-server
     rm -f "$SYSTEMD_SERVICE"
     systemctl daemon-reload
     rm -rf "$CONFIG_DIR"
     rm -f /usr/local/bin/hysteria
-    echo -e "\e[1;32mPNT-UDP server uninstalled successfully.\e[0m"
+    echo -e "\e[1;32mถอนการติดตั้งเซิร์ฟเวอร์ SHAN VPN สำเร็จแล้ว.\e[0m"
 }
 
 show_banner() {
     echo -e "\e[1;36m---------------------------------------------"
-    echo " PNT UDP Script"
-    echo " (c) 2024 Pnt Vpn"
+    echo " ผู้จัดการ SHAN VPN"
+    echo " (c) 2025 SHAN VPN"
     echo " Telegram: @ovpnth"
     echo "---------------------------------------------\e[0m"
 }
 
 show_menu() {
     echo -e "\e[1;36m----------------------------"
-    echo " PNT UDP Script"
+    echo " SHAN VPN UDP Script"
     echo -e "----------------------------\e[0m"
-    echo -e "\e[1;32m1. Add new user"
-    echo "2. Edit user password"
-    echo "3. Delete user"
-    echo "4. Show users"
-    echo "5. Change domain"
-    echo "6. Change obfuscation string"
-    echo "7. Change upload speed"
-    echo "8. Change download speed"
-    echo "9. Restart server"
-    echo "10. Uninstall server"
-    echo -e "11. Exit\e[0m"
+    echo -e "\e[1;32m1. เพิ่มผู้ใช้ใหม่"
+    echo "2. แก้ไขรหัสผ่านผู้ใช้"
+    echo "3. ลบผู้ใช้"
+    echo "4. แสดงผู้ใช้"
+    echo "5. เปลี่ยนโดเมน"
+    echo "6. เปลี่ยนสตริงการบดบัง"
+    echo "7. เปลี่ยนความเร็วในการอัพโหลด"
+    echo "8. เปลี่ยนความเร็วในการดาวน์โหลด"
+    echo "9. รีสตาร์ทเซิร์ฟเวอร์"
+    echo "10. ถอนการติดตั้งเซิร์ฟเวอร์"
+    echo -e "11. ออก\e[0m"
     echo -e "\e[1;36m----------------------------"
-    echo -e "Enter your choice: \e[0m"
+    echo -e "ป้อนตัวเลือกของคุณ: \e[0m"
 }
 
 show_banner
@@ -161,6 +161,6 @@ while true; do
         9) restart_server ;;
         10) uninstall_server; exit 0 ;;
         11) exit 0 ;;
-        *) echo -e "\e[1;31mInvalid choice. Please try again.\e[0m" ;;
+        *) echo -e "\e[1;31mตัวเลือกไม่ถูกต้อง กรุณาลองอีกครั้ง.\e[0m" ;;
     esac
 done
