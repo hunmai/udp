@@ -179,7 +179,7 @@ install_software() {
         echo "Installing $package using pacman..."
         pacman -Sy --noconfirm "$package"
     else
-        echo "Error: No supported package manager found. Please install $package manually."
+        echo "ข้อผิดพลาด: ไม่พบตัวจัดการแพ็คเกจที่รองรับ โปรดติดตั้ง $package ด้วยตนเอง."
         exit 1
     fi
 }
@@ -194,18 +194,18 @@ check_permission() {
         return
     fi
 
-    note "The user currently executing this script is not root."
+    note "ผู้ใช้ที่กำลังดำเนินการสคริปต์นี้อยู่ขณะนี้ไม่ใช่รูท"
 
     case "$FORCE_NO_ROOT" in
         '1')
-            warning "FORCE_NO_ROOT=1 is specified, we will process without root and you may encounter the insufficient privilege error."
+            warning "FORCE_NO_ROOT=1 หากระบุไว้ เราจะดำเนินการโดยไม่ต้องใช้ root และคุณอาจพบข้อผิดพลาดสิทธิ์ไม่เพียงพอ"
             ;;
         *)
             if has_command sudo; then
-                note "Re-running this script with sudo, you can also specify FORCE_NO_ROOT=1 to force this script running with current user."
+                note "การรันสคริปต์นี้อีกครั้งด้วย sudo คุณยังสามารถระบุ FORCE_NO_ROOT=1 เพื่อบังคับให้สคริปต์นี้ทำงานกับผู้ใช้ปัจจุบัน"
                 exec_sudo "$0" "${SCRIPT_ARGS[@]}"
             else
-                error "Please run this script with root or specify FORCE_NO_ROOT=1 to force this script running with current user."
+                error "กรุณารันสคริปต์นี้ด้วย root หรือระบุ FORCE_NO_ROOT=1 เพื่อบังคับให้สคริปต์นี้ทำงานกับผู้ใช้ปัจจุบัน."
                 exit 13
             fi
             ;;
@@ -214,7 +214,7 @@ check_permission() {
 
 check_environment_operating_system() {
     if [[ -n "$OPERATING_SYSTEM" ]]; then
-        warning "OPERATING_SYSTEM=$OPERATING_SYSTEM is specified, operating system detection will not be performed."
+        warning "OPERATING_SYSTEM=$OPERATING_SYSTEM หากระบุไว้ จะไม่มีการตรวจจับระบบปฏิบัติการ"
         return
     fi
 
@@ -223,14 +223,14 @@ check_environment_operating_system() {
         return
     fi
 
-    error "This script only supports Linux."
-    note "Specify OPERATING_SYSTEM=[linux|darwin|freebsd|windows] to bypass this check and force this script running on this $(uname)."
+    error "สคริปต์นี้รองรับเฉพาะ Linux เท่านั้น"
+    note "Specify OPERATING_SYSTEM=[linux|darwin|freebsd|windows] เพื่อข้ามการตรวจสอบนี้และบังคับให้สคริปต์นี้ทำงานบนนี้ $(uname)."
     exit 95
 }
 
 check_environment_architecture() {
     if [[ -n "$ARCHITECTURE" ]]; then
-        warning "ARCHITECTURE=$ARCHITECTURE is specified, architecture detection will not be performed."
+        warning "ARCHITECTURE=$ARCHITECTURE หากระบุแล้ว การตรวจจับสถาปัตยกรรมจะไม่ถูกดำเนินการ"
         return
     fi
 
@@ -254,8 +254,8 @@ check_environment_architecture() {
             ARCHITECTURE='s390x'
             ;;
         *)
-            error "The architecture '$(uname -a)' is not supported."
-            note "Specify ARCHITECTURE=<architecture> to bypass this check and force this script running on this $(uname -m)."
+            error "สถาปัตยกรรม '$(uname -a)' ไม่ได้รับการสนับสนุน."
+            note "Specify ARCHITECTURE=<architecture> เพื่อข้ามการตรวจสอบนี้และบังคับให้สคริปต์นี้ทำงานบนนี้ $(uname -m)."
             exit 8
             ;;
     esac
@@ -268,15 +268,15 @@ check_environment_systemd() {
 
     case "$FORCE_NO_SYSTEMD" in
         '1')
-            warning "FORCE_NO_SYSTEMD=1 is specified, we will process as normal even if systemd is not detected by us."
+            warning "FORCE_NO_SYSTEMD=1 ระบุไว้แล้ว เราจะดำเนินการตามปกติแม้ว่าเราจะไม่ตรวจพบ systemd ก็ตาม"
             ;;
         '2')
-            warning "FORCE_NO_SYSTEMD=2 is specified, we will process but all systemd related commands will not be executed."
+            warning "FORCE_NO_SYSTEMD=2 ระบุไว้แล้ว เราจะดำเนินการ แต่คำสั่งที่เกี่ยวข้องกับ systemd ทั้งหมดจะไม่ถูกดำเนินการ."
             ;;
         *)
-            error "This script only supports Linux distributions with systemd."
-            note "Specify FORCE_NO_SYSTEMD=1 to disable this check and force this script running as systemd is detected."
-            note "Specify FORCE_NO_SYSTEMD=2 to disable this check along with all systemd related commands."
+            error "สคริปต์นี้รองรับเฉพาะการแจกจ่าย Linux ที่มี systemd เท่านั้น."
+            note "Specify FORCE_NO_SYSTEMD=1 เพื่อปิดการใช้งานการตรวจสอบนี้และบังคับให้สคริปต์นี้ทำงานในขณะที่ตรวจพบ systemd"
+            note "Specify FORCE_NO_SYSTEMD=2 เพื่อปิดการใช้งานการตรวจสอบนี้พร้อมกับคำสั่งที่เกี่ยวข้องกับ systemd ทั้งหมด."
             ;;
     esac
 }
@@ -522,7 +522,7 @@ setup_db() {
         # Create the database file
         sqlite3 "$USER_DB" ".databases"
         if [[ $? -ne 0 ]]; then
-            echo "Error: Unable to create database file at $USER_DB"
+            echo "ข้อผิดพลาด: ไม่สามารถสร้างไฟล์ฐานข้อมูลได้ที่ $USER_DB"
             exit 1
         fi
     fi
@@ -538,7 +538,7 @@ EOF
     # Check if the table 'users' was created successfully
     table_exists=$(sqlite3 "$USER_DB" "SELECT name FROM sqlite_master WHERE type='table' AND name='users';")
     if [[ "$table_exists" == "users" ]]; then
-        echo "Database setup completed successfully. Table 'users' exists."
+        echo "การตั้งค่าฐานข้อมูลเสร็จสมบูรณ์ ตาราง 'ผู้ใช้' มีอยู่"
         
         # Add a default user if not already exists
         default_username="default"
@@ -548,17 +548,17 @@ EOF
         if [[ -z "$user_exists" ]]; then
             sqlite3 "$USER_DB" "INSERT INTO users (username, password) VALUES ('$default_username', '$default_password');"
             if [[ $? -eq 0 ]]; then
-                echo "Default user created successfully."
+                echo "สร้างผู้ใช้เริ่มต้นสำเร็จแล้ว"
             else
-                echo "Error: Failed to create default user."
+                echo "ข้อผิดพลาด: ไม่สามารถสร้างผู้ใช้เริ่มต้นได้"
             fi
         else
-            echo "Default user already exists."
+            echo "ผู้ใช้เริ่มต้นมีอยู่แล้ว."
         fi
     else
-        echo "Error: Table 'users' was not created successfully."
+        echo "ข้อผิดพลาด: ไม่สามารถสร้างตาราง 'ผู้ใช้' ได้สำเร็จ"
         # Show the database schema for debugging
-        echo "Current database schema:"
+        echo "โครงร่างฐานข้อมูลปัจจุบัน:"
         sqlite3 "$USER_DB" ".schema"
         exit 1
     fi
@@ -575,9 +575,9 @@ fetch_users() {
 
 perform_install_hysteria_binary() {
     if [[ -n "$LOCAL_FILE" ]]; then
-        note "Performing local install: $LOCAL_FILE"
+        note "การดำเนินการติดตั้งภายในเครื่อง: $LOCAL_FILE"
 
-        echo -ne "Installing hysteria executable ... "
+        echo -ne "กำลังติดตั้งไฟล์ปฏิบัติการ hysteria ..."
 
         if install -Dm755 "$LOCAL_FILE" "$EXECUTABLE_INSTALL_PATH"; then
             echo "ok"
@@ -595,7 +595,7 @@ perform_install_hysteria_binary() {
         exit 11
     fi
 
-    echo -ne "Installing hysteria executable ... "
+    echo -ne "การติดตั้งโปรแกรมปฏิบัติการ Hysteria... "
 
     if install -Dm755 "$_tmpfile" "$EXECUTABLE_INSTALL_PATH"; then
         echo "ok"
@@ -644,15 +644,15 @@ perform_install_manager_script() {
     local _manager_script="/usr/local/bin/agnudp_manager.sh"
     local _symlink_path="/usr/local/bin/agnudp"
     
-    echo "Downloading manager script..."
+    echo "กำลังดาวน์โหลดสคริปต์ตัวจัดการ..."
     curl -o "$_manager_script" "https://raw.githubusercontent.com/hunmai/udp/refs/heads/main/agnudp_manager.sh"
     chmod +x "$_manager_script"
     
-    echo "Creating symbolic link to run the manager script using 'agnudp' command..."
+    echo "กำลังสร้างลิงก์สัญลักษณ์เพื่อรันสคริปต์ตัวจัดการโดยใช้คำสั่ง 'shanudp'"
     ln -sf "$_manager_script" "$_symlink_path"
     
-    echo "Manager script installed at $_manager_script"
-    echo "You can now run the manager using the 'agnudp' command."
+    echo "สคริปต์ผู้จัดการติดตั้งอยู่ที่ $_manager_script"
+    echo "ตอนนี้คุณสามารถรันตัวจัดการโดยใช้คำสั่ง 'shanud' ได้"
 }
 
 
@@ -681,10 +681,10 @@ restart_running_services() {
         return
     fi
     
-    echo "Restarting running service ... "
+    echo "กำลังเริ่มการทำงานของบริการใหม่ ... "
     
     for service in $(get_running_services); do
-        echo -ne "Restarting $service ... "
+        echo -ne "การเริ่มต้นใหม่ $service ... "
         systemctl restart "$service"
         echo "done"
     done
@@ -695,12 +695,12 @@ stop_running_services() {
         return
     fi
     
-    echo "Stopping running service ... "
+    echo "การหยุดการทำงานของบริการ ... "
     
     for service in $(get_running_services); do
-        echo -ne "Stopping $service ... "
+        echo -ne "การหยุด $service ... "
         systemctl stop "$service"
-        echo "done"
+        echo "เสร็จแล้ว"
     done
 }
 
@@ -720,22 +720,22 @@ perform_install() {
 
     if [[ -n "$_is_fresh_install" ]]; then
         echo
-        echo -e "$(tbold)Congratulations! PNT-UDP has been successfully installed on your server.$(treset)"
-        echo "Use 'agnudp' command to access the manager."
+        echo -e "$(tbold)ยินดีด้วย! SHAN-UDP ได้รับการติดตั้งบนเซิร์ฟเวอร์ของคุณเรียบร้อยแล้ว.$(treset)"
+        echo "ใช้คำสั่ง 'shanudp' เพื่อเข้าถึงตัวจัดการ"
 
         echo
-        echo -e "$(tbold)Client app pnt vpn:$(treset)"
-        echo -e "$(tblue)https://play.google.com/store/apps/details?id=com.pntvpn.net$(treset)"
+        echo -e "$(tbold)Client app shan vpn:$(treset)"
+        echo -e "$(tblue)https://play.google.com/store/apps/details?id=com.shanvpn.vpnth$(treset)"
         echo
-        echo -e "Follow me!"
+        echo -e "ติดตามฉัน!"
         echo
-        echo -e "\t+ Check out my Page at $(tblue)https://www.facebook.com/share/1ARS7J4yXp/$(treset)"
+        echo -e "\t+ ลองดูหน้าของฉัน at $(tblue)https://www.facebook.com/share/1ARS7J4yXp/$(treset)"
         echo
     else
         restart_running_services
         start_services
         echo
-        echo -e "$(tbold)PNT-UDP has been successfully updated to $VERSION.$(treset)"
+        echo -e "$(tbold)SHAN-UDP ได้รับการอัปเดตเรียบร้อยแล้ว $VERSION.$(treset)"
         echo
     fi
 }
@@ -746,9 +746,9 @@ perform_remove() {
     perform_remove_hysteria_systemd
 
     echo
-    echo -e "$(tbold)Congratulations! PNT-UDP has been successfully removed from your server.$(treset)"
+    echo -e "$(tbold)ขอแสดงความยินดี! SHAN-UDP ได้ถูกลบออกจากเซิร์ฟเวอร์ของคุณเรียบร้อยแล้ว.$(treset)"
     echo
-    echo -e "You still need to remove configuration files and ACME certificates manually with the following commands:"
+    echo -e "คุณยังต้องลบไฟล์การกำหนดค่าและใบรับรอง ACME ด้วยตนเองด้วยคำสั่งต่อไปนี้:"
     echo
     echo -e "\t$(tred)rm -rf "$CONFIG_DIR"$(treset)"
     if [[ "x$HYSTERIA_USER" != "xroot" ]]; then
@@ -756,7 +756,7 @@ perform_remove() {
     fi
     if [[ "x$FORCE_NO_SYSTEMD" != "x2" ]]; then
         echo
-        echo -e "You still might need to disable all related systemd services with the following commands:"
+        echo -e "คุณอาจยังต้องปิดใช้งานบริการ systemd ที่เกี่ยวข้องทั้งหมดด้วยคำสั่งต่อไปนี้:"
         echo
         echo -e "\t$(tred)rm -f /etc/systemd/system/multi-user.target.wants/hysteria-server.service$(treset)"
         echo -e "\t$(tred)rm -f /etc/systemd/system/multi-user.target.wants/hysteria-server@*.service$(treset)"
@@ -766,7 +766,7 @@ perform_remove() {
 }
 
 setup_ssl() {
-    echo "Installing SSL certificates"
+    echo "การติดตั้งใบรับรอง SSL"
 
     openssl genrsa -out /etc/hysteria/hysteria.ca.key 2048
 
@@ -812,7 +812,7 @@ main() {
             perform_remove
             ;;
         *)
-            error "Unknown operation '$OPERATION'."
+            error "การดำเนินการที่ไม่รู้จัก '$OPERATION'."
             ;;
     esac
 }
