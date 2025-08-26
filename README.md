@@ -1,11 +1,11 @@
-# PNT-UDP By pntvpn
+# PNT-UDP By SHAN VPN
 
 THIS IS A SCRIPT FOR AUTO INSTALLATION OF UDP (HYSTERIA SERVER) 
 
-# Client app PNT VPN
+# Client app SHAN VPN
 
 <p>
-<a href="https://play.google.com/store/apps/details?id=com.pntvpn.net"><img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height="100"></a>
+<a href="https://play.google.com/store/apps/details?id=com.shanvpn.vpnth"><img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height="100"></a>
 </p>
 
 
