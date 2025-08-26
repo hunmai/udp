@@ -17,10 +17,10 @@ PROTOCOL="udp"
 UDP_PORT=":36712"
 
 # OBFS
-OBFS="agnudp"
+OBFS="shanudp"
 
 # PASSWORDS
-PASSWORD="agnudp"
+PASSWORD="shanudp"
 
 # Script paths
 SCRIPT_NAME="$(basename "$0")"
