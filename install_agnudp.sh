@@ -642,7 +642,7 @@ perform_install_hysteria_home_legacy() {
 
 perform_install_manager_script() {
     local _manager_script="/usr/local/bin/agnudp_manager.sh"
-    local _symlink_path="/usr/local/bin/agnudp"
+    local _symlink_path="/usr/local/bin/shanudp"
     
     echo "กำลังดาวน์โหลดสคริปต์ตัวจัดการ..."
     curl -o "$_manager_script" "https://raw.githubusercontent.com/hunmai/udp/refs/heads/main/agnudp_manager.sh"
